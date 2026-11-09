@@ -1,6 +1,5 @@
 <?php
 // login.php - Login Page with Role-based Redirect + Fingerprint Link
-// Enforces: only the primary administrator can log in as admin
 require_once 'config.php';
 
 $error = '';
@@ -11,38 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (empty($email) || empty($password)) {
         $error = 'Please enter both email and password.';
+    } elseif (loginUser($email, $password)) {
+        session_regenerate_id(true);
+        header('Location: ' . BASE_URL . getDashboardUrl($_SESSION['user_role']));
+        exit;
     } else {
-        // ---- Pre-check: is this a non-primary admin? ----
-        $db = getDB();
-        $stmt = $db->prepare("SELECT id, role, is_primary, status FROM users WHERE email = ? LIMIT 1");
-        $stmt->execute(array($email));
-        $candidate = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $blocked = false;
-        if ($candidate) {
-            // Non-primary admin → deny login outright
-            if ($candidate['role'] === 'admin' && empty($candidate['is_primary'])) {
-                $blocked = true;
-                $error = "This administrator account is disabled. MA-LIFE allows only one active administrator.";
-                error_log("MA-LIFE: Blocked non-primary admin login attempt for {$email}");
-            }
-            // Inactive user
-            if (isset($candidate['status']) && $candidate['status'] !== 'active') {
-                $blocked = true;
-                $error = "Your account is inactive. Contact the system administrator.";
-            }
-        }
-
-        if (!$blocked) {
-            if (loginUser($email, $password)) {
-                session_regenerate_id(true);
-                $role = $_SESSION['user_role'];
-                header('Location: ' . BASE_URL . getDashboardUrl($role));
-                exit();
-            } else {
-                $error = 'Invalid email or password. Please try again.';
-            }
-        }
+        $error = 'Invalid email or password, or the account is inactive.';
     }
 }
 

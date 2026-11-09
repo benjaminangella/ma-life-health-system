@@ -44,6 +44,7 @@ $table = explode(' ', $source, 2)[0];
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 $db = getDB();
 $columns = ['r.id'];
+if ($recordType === 'user') $columns[] = 'r.is_primary';
 if (in_array($recordType, ['health_worker', 'mother'], true)) {
     $columns[] = 'r.user_id';
 }
@@ -54,6 +55,10 @@ $stmt = $db->prepare('SELECT ' . implode(', ', $columns) . " FROM $source WHERE 
 $stmt->execute([$id ?: 0]);
 $record = $stmt->fetch(PDO::FETCH_ASSOC);
 $error = '';
+if ($recordType === 'user' && !empty($record['is_primary']) && (int) $id !== (int) $_SESSION['user_id']) {
+    http_response_code(403);
+    exit('Only the primary administrator can edit this account.');
+}
 if (!$record) {
     http_response_code(404);
 } elseif (!$readOnly && $_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -3,7 +3,6 @@
  * config.php — MA-LIFE Core Configuration
  * Session security, DB connection, user functions
  * UPDATED: Strong anti-cache headers + JS session guard support
- * UPDATED: Single-administrator enforcement (is_primary flag)
  * UPDATED: BASE_URL set to local hotspot IP for mobile testing
  */
 
@@ -171,19 +170,13 @@ function createUser($data, ?PDO $db = null) {
 }
 
 // ============================================
-// SINGLE-ADMIN HELPERS
+// PRIMARY ADMIN HELPERS
 // ============================================
 function ma_life_count_primary_admins($exclude_id = 0) {
     $db = getDB();
     $stmt = $db->prepare("SELECT COUNT(*) FROM users WHERE role='admin' AND is_primary=1 AND id != ?");
     $stmt->execute(array($exclude_id));
     return (int)$stmt->fetchColumn();
-}
-
-function ma_life_is_disabled_admin($user) {
-    return is_array($user)
-        && isset($user['role']) && $user['role'] === 'admin'
-        && (empty($user['is_primary']) || $user['is_primary'] == 0);
 }
 
 // ============================================
@@ -193,11 +186,6 @@ function loginUser($email, $password) {
     $user = getUserByEmail($email);
 
     if (!$user) {
-        return false;
-    }
-
-    if (ma_life_is_disabled_admin($user)) {
-        error_log("MA-LIFE: Blocked login for non-primary admin: {$email}");
         return false;
     }
 

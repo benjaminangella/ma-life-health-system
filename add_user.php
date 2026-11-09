@@ -1,6 +1,5 @@
 <?php
 // add_user.php - Add New User
-// Enforces: only ONE active administrator allowed
 require_once 'config.php';
 requireRole('admin');
 
@@ -54,24 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Email already registered.';
     }
 
-    // ============================================================
-    // ADMIN GUARD — Only one admin allowed
-    // ============================================================
-    $is_primary = 0;
-    if ($role === 'admin') {
-        $stmt = $db->query("SELECT COUNT(*) FROM users WHERE role='admin' AND is_primary=1");
-        $existing_admins = (int)$stmt->fetchColumn();
-
-        if ($existing_admins >= 1) {
-            $errors[] = 'MA-LIFE only allows one system administrator. ' .
-                        'An admin account already exists. Please promote an existing user ' .
-                        'or transfer the admin role instead.';
-        } else {
-            // This new admin will be the primary admin
-            $is_primary = 1;
-        }
-    }
-
     // ---- Save if no errors ----
     if (empty($errors)) {
         try {
@@ -88,12 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'gender'        => $gender ?: null,
                 'address'       => $address ?: null
             ], $db);
-
-            // If this new user is the primary admin, mark them
-            if ($is_primary === 1) {
-                $stmt = $db->prepare("UPDATE users SET is_primary = 1, status = 'active' WHERE id = ?");
-                $stmt->execute([$user_id]);
-            }
 
             // Create role-specific record
             if ($role === 'mother') {
@@ -135,9 +110,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $message = "User <strong>" . htmlspecialchars($full_name) . "</strong> added successfully!";
-            if ($is_primary === 1) {
-                $message .= " <em>(This user is the system administrator.)</em>";
-            }
 
             // Clear form fields
             $_POST = [];
@@ -163,9 +135,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $role_stats[$row['role']] = $row['count'];
 }
 
-// Whether an admin already exists (for UI hints)
-$stmt = $db->query("SELECT COUNT(*) FROM users WHERE role='admin' AND is_primary=1");
-$admin_exists = ((int)$stmt->fetchColumn()) > 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -231,7 +200,6 @@ $admin_exists = ((int)$stmt->fetchColumn()) > 0;
         .stat-box .number { font-size: 1.5rem; font-weight: 700; color: #37474f; }
         .stat-box .label { color: #666; font-size: 0.8rem; }
         .stat-box .icon { font-size: 1.2rem; color: #00897b; margin-bottom: 5px; }
-        .admin-warning {
             background: #fff8e1; border-left: 4px solid #ffa000; color: #6d4c41;
             padding: 12px 18px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem;
         }
@@ -289,14 +257,6 @@ $admin_exists = ((int)$stmt->fetchColumn()) > 0;
         <?php endif; ?>
         <?php if ($error): ?>
             <div class="message error"><i class="fas fa-exclamation-circle"></i> <?= $error ?></div>
-        <?php endif; ?>
-
-        <?php if ($admin_exists): ?>
-            <div class="admin-warning">
-                <i class="fas fa-shield-alt"></i>
-                <strong>Single-Administrator Policy:</strong> An administrator already exists in MA-LIFE.
-                Creating another admin is blocked. Only one system administrator may be active at a time.
-            </div>
         <?php endif; ?>
 
         <!-- Stats -->
@@ -380,17 +340,13 @@ $admin_exists = ((int)$stmt->fetchColumn()) > 0;
                         <?php else: ?>
                         <select id="role" name="role" required onchange="toggleRoleFields()">
                             <option value="">-- Select Role --</option>
-                            <option value="admin"         <?= (($_POST['role'] ?? '') === 'admin') ? 'selected' : '' ?>         <?= $admin_exists ? 'disabled' : '' ?>>
-                                Administrator <?= $admin_exists ? '(already exists — disabled)' : '' ?>
+                            <option value="admin"         <?= (($_POST['role'] ?? '') === 'admin') ? 'selected' : '' ?>>
+                                Administrator
                             </option>
                             <option value="healthworker"  <?= (($_POST['role'] ?? '') === 'healthworker') ? 'selected' : '' ?>>Health Worker</option>
                             <option value="mother"        <?= (($_POST['role'] ?? '') === 'mother') ? 'selected' : '' ?>>Mother</option>
                         </select>
                         <?php endif; ?>
-                        <div class="helper-text">
-                            MA-LIFE allows only one administrator account.
-                            <?= $admin_exists ? 'Contact the existing admin to transfer the role.' : '' ?>
-                        </div>
                     </div>
 
                     <!-- Role-specific fields -->

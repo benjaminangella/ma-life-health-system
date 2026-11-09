@@ -1,6 +1,6 @@
 <?php
 // manage_users_admin.php - Manage System Users
-// Enforces: only ONE active administrator allowed
+// Protects the primary administrator account
 require_once 'config.php';
 requireRole('admin');
 
@@ -235,7 +235,7 @@ $primary_admin_count = ma_life_count_primary_admins();
 
         <div class="admin-notice">
             <i class="fas fa-shield-alt"></i>
-            <strong>Single-Administrator Policy:</strong> This system allows only <strong>one active administrator</strong>.
+            <strong>Primary administrator protection</strong>
             <?php if ($primary_admin_id): ?>
                 The primary admin (ID #<?= $primary_admin_id ?>) cannot be deactivated or deleted.
             <?php endif; ?>
