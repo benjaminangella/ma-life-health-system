@@ -12,6 +12,6 @@ COPY api ./api
 COPY pages ./pages
 COPY img ./img
 COPY docker/apache.conf /etc/apache2/conf-enabled/malife.conf
-RUN a2enmod setenvif && mkdir -p uploads /var/lib/malife \
+RUN chmod -R a+rX /var/www/html && a2enmod setenvif && mkdir -p uploads /var/lib/malife \
     && chown www-data:www-data uploads /var/lib/malife \
     && ln -s /var/lib/malife/webauthn_challenges.json webauthn_challenges.json
