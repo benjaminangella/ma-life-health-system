@@ -9,7 +9,9 @@ $message = '';
 $error = '';
 
 // Available roles for dropdown
-$roles = ['admin', 'healthworker', 'mother', 'child'];
+$healthWorkerOnly = $healthWorkerOnly ?? false;
+$_SESSION['add_user_csrf'] ??= bin2hex(random_bytes(32));
+$roles = $healthWorkerOnly ? ['healthworker'] : ['admin', 'healthworker', 'mother'];
 
 // ============================================================
 // HANDLE FORM SUBMISSION
@@ -19,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email            = trim($_POST['email'] ?? '');
     $password         = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
-    $role             = $_POST['role'] ?? '';
+    $role             = $healthWorkerOnly ? 'healthworker' : ($_POST['role'] ?? '');
     $phone            = trim($_POST['phone'] ?? '');
     $date_of_birth    = $_POST['date_of_birth'] ?? '';
     $gender           = $_POST['gender'] ?? '';
@@ -39,6 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // ---- Validation ----
     $errors = [];
+    $token = $_POST['csrf'] ?? '';
+    if (!is_string($token) || !hash_equals($_SESSION['add_user_csrf'], $token)) $errors[] = 'Reload the form and try again.';
     if (strlen($full_name) < 3) $errors[] = 'Full name must be at least 3 characters.';
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Invalid email address.';
     if (strlen($password) < 8) $errors[] = 'Password must be at least 8 characters.';
@@ -74,7 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->beginTransaction();
 
             // Create the user (createUser helper handles password hashing)
-            // NOTE: If createUser() doesn't accept is_primary, we update after.
             $user_id = createUser([
                 'full_name'     => $full_name,
                 'email'         => $email,
@@ -84,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'date_of_birth' => $date_of_birth ?: null,
                 'gender'        => $gender ?: null,
                 'address'       => $address ?: null
-            ]);
+            ], $db);
 
             // If this new user is the primary admin, mark them
             if ($is_primary === 1) {
@@ -126,6 +129,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $db->commit();
+            if ($healthWorkerOnly) {
+                header('Location: health_workers_admin.php', true, 303);
+                exit;
+            }
 
             $message = "User <strong>" . htmlspecialchars($full_name) . "</strong> added successfully!";
             if ($is_primary === 1) {
@@ -165,7 +172,7 @@ $admin_exists = ((int)$stmt->fetchColumn()) > 0;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add User - MA-LIFE</title>
+    <title><?= $healthWorkerOnly ? "Add Health Worker" : "Add User" ?> - MA-LIFE</title>
     <link rel="stylesheet" href="admin.css">
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -247,8 +254,8 @@ $admin_exists = ((int)$stmt->fetchColumn()) > 0;
             <nav>
                 <a href="administrator.php"><i class="fas fa-home"></i> Dashboard</a>
                 <a href="manage_users_admin.php" class="active"><i class="fas fa-users"></i> Manage Users</a>
-                <a href="health_workers.php"><i class="fas fa-user-md"></i> Health Workers</a>
-                <a href="admin_report.php"><i class="fas fa-chart-bar"></i> System Reports</a>
+                <a href="health_workers_admin.php"><i class="fas fa-user-md"></i> Health Workers</a>
+                <a href="reports_admin.php"><i class="fas fa-chart-bar"></i> System Reports</a>
                 <a href="settings.php"><i class="fas fa-cog"></i> System Settings</a>
                 <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </nav>
@@ -257,7 +264,7 @@ $admin_exists = ((int)$stmt->fetchColumn()) > 0;
 
     <!-- Top Bar -->
     <div class="topbar">
-        <div class="header"><h2><i class="fas fa-user-plus"></i> ADD USER</h2></div>
+        <div class="header"><h2><i class="fas fa-user-plus"></i> <?= $healthWorkerOnly ? "ADD HEALTH WORKER" : "ADD USER" ?></h2></div>
     </div>
 
     <!-- Main Content -->
@@ -271,7 +278,7 @@ $admin_exists = ((int)$stmt->fetchColumn()) > 0;
         </div>
 
         <div class="page-header">
-            <h2>Add New User</h2>
+            <h2><?= $healthWorkerOnly ? "Add Health Worker" : "Add New User" ?></h2>
             <a href="manage_users_admin.php" class="btn-cancel">
                 <i class="fas fa-arrow-left"></i> Back to Users
             </a>
@@ -307,6 +314,7 @@ $admin_exists = ((int)$stmt->fetchColumn()) > 0;
                 <div class="card-subtitle">Fill in the details below to create a new user account with role-specific information.</div>
 
                 <form method="POST" action="" id="userForm">
+                    <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['add_user_csrf']) ?>">
                     <!-- Basic Information -->
                     <div class="section-title"><i class="fas fa-user-circle"></i> Basic Information</div>
 
@@ -366,6 +374,10 @@ $admin_exists = ((int)$stmt->fetchColumn()) > 0;
                     <div class="section-title"><i class="fas fa-user-tag"></i> Role</div>
                     <div class="form-group">
                         <label for="role">User Role <span class="required">*</span></label>
+                        <?php if ($healthWorkerOnly): ?>
+                        <input type="hidden" id="role" name="role" value="healthworker">
+                        <span>Health Worker</span>
+                        <?php else: ?>
                         <select id="role" name="role" required onchange="toggleRoleFields()">
                             <option value="">-- Select Role --</option>
                             <option value="admin"         <?= (($_POST['role'] ?? '') === 'admin') ? 'selected' : '' ?>         <?= $admin_exists ? 'disabled' : '' ?>>
@@ -373,8 +385,8 @@ $admin_exists = ((int)$stmt->fetchColumn()) > 0;
                             </option>
                             <option value="healthworker"  <?= (($_POST['role'] ?? '') === 'healthworker') ? 'selected' : '' ?>>Health Worker</option>
                             <option value="mother"        <?= (($_POST['role'] ?? '') === 'mother') ? 'selected' : '' ?>>Mother</option>
-                            <option value="child"         <?= (($_POST['role'] ?? '') === 'child') ? 'selected' : '' ?>>Child</option>
                         </select>
+                        <?php endif; ?>
                         <div class="helper-text">
                             MA-LIFE allows only one administrator account.
                             <?= $admin_exists ? 'Contact the existing admin to transfer the role.' : '' ?>

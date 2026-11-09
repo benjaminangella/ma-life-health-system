@@ -143,8 +143,8 @@ function getUserById($id) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function createUser($data) {
-    $db = getDB();
+function createUser($data, ?PDO $db = null) {
+    $db = $db ?? getDB();
     $hash = hashPassword($data['password']);
 
     $is_primary = isset($data['is_primary']) ? (int)$data['is_primary'] : 0;

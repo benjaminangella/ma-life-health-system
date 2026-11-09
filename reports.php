@@ -1,6 +1,10 @@
 <?php
 // health_reports.php - Health Reports for PHP 5.3.5
 require_once 'config.php';
+requireLogin();
+$isWorker = isRole('healthworker');
+if (!$isWorker) requireRole('mother');
+$appointmentOwner = $isWorker ? 'health_worker_id' : 'user_id';
 
 // session_start() is in config.php
 $db = getDB();
@@ -30,7 +34,7 @@ $children = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $stmt = $db->prepare("
     SELECT status, COUNT(*) as count 
     FROM appointments 
-    WHERE user_id = ? 
+    WHERE $appointmentOwner = ? 
     GROUP BY status
 ");
 $stmt->execute(array($user_id));
@@ -119,15 +123,17 @@ foreach ($appointment_stats as $stat) {
             <div class="logo">
                 <img src="img/logo.png" alt="MA-Life Logo">
             </div>
-            <h2>Mother Portal</h2>
+            <h2><?= $isWorker ? 'Health Worker Portal' : 'Mother Portal' ?></h2>
             <nav>
-                <a href="mother_dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="<?= $isWorker ? 'healthworker.php' : 'mother_dashboard.php' ?>"><i class="fas fa-home"></i> Dashboard</a>
+                <?php if (!$isWorker): ?>
                 <a href="mother_profile.php"><i class="fas fa-user"></i> My Profile</a>
                 <a href="register_child.php"><i class="fas fa-plus-circle"></i> Register Child</a>
+                <?php endif; ?>
                 <a href="child_records.php"><i class="fas fa-child"></i> Child Records</a>
                 <a href="immunization.php"><i class="fas fa-syringe"></i> Immunization</a>
                 <a href="appointments.php"><i class="fas fa-calendar"></i> Appointments</a>
-                <a href="health_reports.php" class="active"><i class="fas fa-chart-bar"></i> Health Reports</a>
+                <a href="reports.php" class="active"><i class="fas fa-chart-bar"></i> Health Reports</a>
                 <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </nav>
         </div>

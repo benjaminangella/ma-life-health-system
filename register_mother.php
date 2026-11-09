@@ -2,7 +2,9 @@
 // register_mother.php - Register a New Mother (Health Worker View)
 require_once 'config.php';
 require_once 'sms_queue.php';
-requireRole('healthworker');
+requireLogin();
+$isAdmin = isRole('admin');
+if (!$isAdmin) requireRole('healthworker');
 
 $db = getDB();
 $message = '';
@@ -49,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'date_of_birth' => $date_of_birth,
                 'gender'        => $gender,
                 'address'       => $address
-            ]);
+            ], $db);
 
             // 2. Create Mother Profile
             $stmt = $db->prepare("
@@ -182,7 +184,8 @@ $total_mothers = $stmt->fetchColumn();
 
         <div class="nav-group">
             <div class="nav-label">Main Menu</div>
-            <a href="healthworker.php" class="nav-link"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="<?= $isAdmin ? 'mothers_admin.php' : 'healthworker.php' ?>" class="nav-link"><i class="fas fa-th-large"></i> Dashboard</a>
+            <?php if (!$isAdmin): ?>
             <a href="register_fingerprint.php" class="nav-link"><i class="fas fa-fingerprint"></i> Fingerprint</a>
             <a href="admin_notes.php" class="nav-link"><i class="fas fa-sticky-note"></i> Notes & Files</a>
             <a href="health_worker_details.php" class="nav-link"><i class="fas fa-user-md"></i> My Details</a>
@@ -200,6 +203,7 @@ $total_mothers = $stmt->fetchColumn();
         <div class="nav-group">
             <div class="nav-label">System</div>
             <a href="reports.php" class="nav-link"><i class="fas fa-chart-pie"></i> Health Reports</a>
+            <?php endif; ?>
             <a href="logout.php" class="nav-link" style="color: #fca5a5; margin-top: 20px;"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
     </div>
@@ -212,7 +216,7 @@ $total_mothers = $stmt->fetchColumn();
                 <h2>Register New Mother</h2>
                 <p style="color: #64748b; font-size: 0.9rem; margin-top: 4px;">Create a new Mother Profile in the system. Total registered: <?= $total_mothers ?></p>
             </div>
-            <a href="healthworker.php" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
+            <a href="<?= $isAdmin ? 'mothers_admin.php' : 'healthworker.php' ?>" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
         </div>
 
         <div class="form-container">
@@ -320,7 +324,7 @@ $total_mothers = $stmt->fetchColumn();
                 <!-- Actions -->
                 <div class="form-actions" style="border: none; padding: 0;">
                     <button type="submit" class="btn"><i class="fas fa-user-plus"></i> Register Mother</button>
-                    <a href="healthworker.php" class="btn btn-outline"><i class="fas fa-times"></i> Cancel</a>
+                    <a href="<?= $isAdmin ? 'mothers_admin.php' : 'healthworker.php' ?>" class="btn btn-outline"><i class="fas fa-times"></i> Cancel</a>
                 </div>
             </form>
 

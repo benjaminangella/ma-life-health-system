@@ -87,9 +87,9 @@ try {
         <h2>Healthworker</h2>
         <nav>
             <a href="healthworker.php" class="active"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="mothers.php"><i class="fas fa-female"></i> Mothers</a>
+            <a href="mother_records.php"><i class="fas fa-female"></i> Mothers</a>
             <a href="antenatal.php"><i class="fas fa-heartbeat"></i> Antenatal Visits</a>
-            <a href="children.php"><i class="fas fa-child"></i> Children</a>
+            <a href="child_records.php"><i class="fas fa-child"></i> Children</a>
             <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </nav>
     </div>
