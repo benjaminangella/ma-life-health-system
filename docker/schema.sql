@@ -481,3 +481,13 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+INSERT IGNORE INTO `system_settings` (`id`, `setting_key`, `setting_value`, `description`) VALUES
+(1, 'system_name', 'MA-LIFE', 'System Name'),
+(2, 'system_version', 'v1.0.0', 'Current Version'),
+(3, 'maintenance_mode', 'false', 'Enable maintenance mode'),
+(4, 'allow_registration', 'true', 'Allow new user registration'),
+(5, 'default_language', 'en', 'Default system language'),
+(6, 'timezone', 'Africa/Kampala', 'Default timezone'),
+(7, 'date_format', 'Y-m-d', 'Default date format'),
+(8, 'session_timeout', '1800', 'Session timeout (seconds)');
