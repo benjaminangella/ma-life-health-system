@@ -241,7 +241,7 @@ $total_size = (int)$stmt->fetchColumn();
                                     <td><?php echo date('M d, Y', strtotime($doc['uploaded_at'])); ?></td>
                                     <td>
                                         <div class="actions">
-                                            <a href="uploads/documents/<?php echo htmlspecialchars($doc['file_path']); ?>" target="_blank" class="btn-sm btn-view" title="View">
+                                            <a href="download_document.php?type=document&amp;inline=1&amp;id=<?php echo (int) $doc['id']; ?>" class="btn-sm btn-view" title="View">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <a href="download_document.php?type=document&id=<?php echo $doc['id']; ?>" class="btn-sm btn-dl" title="Download">

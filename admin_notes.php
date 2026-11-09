@@ -422,7 +422,7 @@ if (!empty($attachments_by_note[$note['id']])) {
     foreach ($attachments_by_note[$note['id']] as $a) {
         $att_json[] = [
             'name' => $a['file_name'],
-            'url'  => 'uploads/documents/' . $a['file_path'],
+            'url'  => 'download_document.php?type=note_attachment&inline=1&id=' . (int) $a['id'],
             'download' => 'download_document.php?type=note_attachment&id=' . $a['id'],
             'size' => round($a['file_size'] / 1024, 1) . ' KB',
             'is_image' => (int)$a['is_image'],
@@ -450,14 +450,14 @@ if (!empty($attachments_by_note[$note['id']])) {
 <?php foreach ($attachments_by_note[$note['id']] as $att): ?>
 <div class="att">
 <?php if ($att['is_image'] && file_exists(__DIR__ . '/uploads/documents/' . $att['file_path'])): ?>
-<img src="uploads/documents/<?php echo htmlspecialchars($att['file_path']); ?>" class="att-thumb" alt="">
+<img src="download_document.php?type=note_attachment&amp;inline=1&amp;id=<?php echo (int) $att['id']; ?>" class="att-thumb" alt="">
 <?php else: ?>
 <i class="fas <?php echo document_icon($att['file_path']); ?>" style="color:<?php echo $primary; ?>;"></i>
 <?php endif; ?>
 <span><?php echo htmlspecialchars($att['file_name']); ?></span>
 <span style="color:#999;">(<?php echo round($att['file_size']/1024,1); ?> KB)</span>
 <div class="att-actions">
-<a href="uploads/documents/<?php echo htmlspecialchars($att['file_path']); ?>" target="_blank" class="view" onclick="event.stopPropagation();"><i class="fas fa-eye"></i></a>
+<a href="download_document.php?type=note_attachment&amp;inline=1&amp;id=<?php echo (int) $att['id']; ?>" class="view" onclick="event.stopPropagation();"><i class="fas fa-eye"></i></a>
 <a href="download_document.php?type=note_attachment&id=<?php echo $att['id']; ?>" class="view" onclick="event.stopPropagation();"><i class="fas fa-download"></i></a>
 <a href="?delete_attachment=<?php echo $att['id']; ?>" class="del" data-confirm="Remove this attachment?"><i class="fas fa-times"></i></a>
 </div>
@@ -490,7 +490,7 @@ if (!empty($attachments_by_note[$note['id']])) {
     foreach ($attachments_by_note[$note['id']] as $a) {
         $att_json[] = [
             'name' => $a['file_name'],
-            'url'  => 'uploads/documents/' . $a['file_path'],
+            'url'  => 'download_document.php?type=note_attachment&inline=1&id=' . (int) $a['id'],
             'download' => 'download_document.php?type=note_attachment&id=' . $a['id'],
             'size' => round($a['file_size'] / 1024, 1) . ' KB',
             'is_image' => (int)$a['is_image'],
@@ -522,14 +522,14 @@ if (!empty($attachments_by_note[$note['id']])) {
 <?php foreach ($attachments_by_note[$note['id']] as $att): ?>
 <div class="att">
 <?php if ($att['is_image'] && file_exists(__DIR__ . '/uploads/documents/' . $att['file_path'])): ?>
-<img src="uploads/documents/<?php echo htmlspecialchars($att['file_path']); ?>" class="att-thumb" alt="">
+<img src="download_document.php?type=note_attachment&amp;inline=1&amp;id=<?php echo (int) $att['id']; ?>" class="att-thumb" alt="">
 <?php else: ?>
 <i class="fas <?php echo document_icon($att['file_path']); ?>" style="color:<?php echo $primary; ?>;"></i>
 <?php endif; ?>
 <span><?php echo htmlspecialchars($att['file_name']); ?></span>
 <span style="color:#999;">(<?php echo round($att['file_size']/1024,1); ?> KB)</span>
 <div class="att-actions">
-<a href="uploads/documents/<?php echo htmlspecialchars($att['file_path']); ?>" target="_blank" class="view" onclick="event.stopPropagation();"><i class="fas fa-eye"></i></a>
+<a href="download_document.php?type=note_attachment&amp;inline=1&amp;id=<?php echo (int) $att['id']; ?>" class="view" onclick="event.stopPropagation();"><i class="fas fa-eye"></i></a>
 <a href="download_document.php?type=note_attachment&id=<?php echo $att['id']; ?>" class="view" onclick="event.stopPropagation();"><i class="fas fa-download"></i></a>
 </div>
 </div>
@@ -667,7 +667,7 @@ function openNoteDetail(note) {
                             '<div style="font-weight:600; font-size:0.9rem; word-break:break-all;">' + a.name + '</div>' +
                             '<div style="font-size:0.75rem; color:#999;">' + a.size + '</div>' +
                         '</div>' +
-                        '<a href="' + a.url + '" target="_blank" style="padding:6px 12px; background:<?php echo $primary; ?>; color:white; border-radius:6px; font-size:0.75rem; font-weight:600; text-decoration:none;"><i class="fas fa-eye"></i> View</a>' +
+                        '<a href="' + a.url + '" style="padding:6px 12px; background:<?php echo $primary; ?>; color:white; border-radius:6px; font-size:0.75rem; font-weight:600; text-decoration:none;"><i class="fas fa-eye"></i> View</a>' +
                         '<a href="' + a.download + '" style="padding:6px 12px; background:#e0f2f1; color:#00695c; border-radius:6px; font-size:0.75rem; font-weight:600; text-decoration:none;"><i class="fas fa-download"></i> Download</a>' +
                     '</div>';
         });

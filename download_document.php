@@ -1,117 +1,56 @@
 <?php
-// download_document.php - Force-download any document, note attachment, or profile picture
-require_once 'config.php';
+require_once __DIR__ . '/config.php';
 requireLogin();
 
 $db = getDB();
-$type = isset($_GET['type']) ? $_GET['type'] : 'document';
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$type = $_GET['type'] ?? 'document';
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+$user = (int) $_SESSION['user_id'];
+$isStaff = isRole('admin') || isRole('healthworker');
 
-if ($id < 1) { http_response_code(400); die('Invalid ID'); }
-
-// ============================================
-// NOTE ATTACHMENT (admin_note_attachments table)
-// ============================================
-if ($type === 'note_attachment') {
-    $stmt = $db->prepare("SELECT * FROM admin_note_attachments WHERE id = ?");
-    $stmt->execute(array($id));
-    $att = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$att) {
-        http_response_code(404);
-        die('Note attachment not found');
-    }
-
-    $path = __DIR__ . '/uploads/documents/' . $att['file_path'];
-    if (!file_exists($path)) {
-        http_response_code(404);
-        die('File missing on server');
-    }
-
-    header('Content-Description: File Transfer');
-    header('Content-Type: ' . ($att['file_mime'] ?: 'application/octet-stream'));
-    header('Content-Disposition: attachment; filename="' . basename($att['file_name']) . '"');
-    header('Content-Length: ' . filesize($path));
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-    readfile($path);
-    exit;
+if (!$id) {
+    http_response_code(400);
+    exit('Invalid document ID.');
 }
 
-// ============================================
-// REGULAR DOCUMENT (documents table)
-// ============================================
-if ($type === 'document') {
-    // First try documents table
-    $stmt = $db->prepare("SELECT * FROM documents WHERE id = ?");
-    $stmt->execute(array($id));
-    $doc = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // If not found, try admin_note_attachments (fallback)
-    if (!$doc) {
-        $stmt = $db->prepare("SELECT * FROM admin_note_attachments WHERE id = ?");
-        $stmt->execute(array($id));
-        $note_att = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($note_att) {
-            // Redirect to the proper handler
-            header('Location: download_document.php?type=note_attachment&id=' . $id);
-            exit;
-        }
-        http_response_code(404);
-        die('Document not found (checked documents and note attachments for id=' . $id . ')');
-    }
-
-    $path = __DIR__ . '/uploads/documents/' . $doc['file_path'];
-    if (!file_exists($path)) {
-        http_response_code(404);
-        die('File missing on server: ' . $doc['file_path']);
-    }
-
-    // Log the download
-    try {
-        $log = $db->prepare("INSERT INTO notifications_log (user_id, phone, notification_type, message, status, created_at) VALUES (?, '', 'download', ?, 'sent', NOW())");
-        $log->execute(array($_SESSION['user_id'], 'Downloaded: ' . $doc['doc_title']));
-    } catch (Exception $e) { /* ignore */ }
-
-    header('Content-Description: File Transfer');
-    header('Content-Type: ' . ($doc['file_mime'] ?: 'application/octet-stream'));
-    header('Content-Disposition: attachment; filename="' . basename($doc['file_name']) . '"');
-    header('Content-Length: ' . filesize($path));
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-    readfile($path);
-    exit;
+$directory = __DIR__ . '/uploads/documents';
+if ($type === 'child_document') {
+    $stmt = $db->prepare('SELECT d.file_name, d.file_path FROM child_documents d
+        JOIN children c ON c.id = d.child_id JOIN mothers m ON m.id = c.mother_id
+        WHERE d.id = ? AND (? = 1 OR m.user_id = ?)');
+    $stmt->execute([$id, (int) $isStaff, $user]);
+} elseif ($type === 'note_attachment') {
+    $stmt = $db->prepare('SELECT a.file_name, a.file_path FROM admin_note_attachments a
+        JOIN admin_notes n ON n.id = a.note_id
+        WHERE a.id = ? AND (n.user_id = ? OR n.shared_with_id = ?)');
+    $stmt->execute([$id, $user, $user]);
+} elseif ($type === 'document') {
+    $stmt = $db->prepare('SELECT file_name, file_path FROM documents WHERE id = ? AND (? = 1 OR uploaded_by = ?)');
+    $stmt->execute([$id, (int) $isStaff, $user]);
+} elseif ($type === 'profile') {
+    $directory = __DIR__ . '/uploads/profiles';
+    $stmt = $db->prepare('SELECT profile_picture AS file_name, profile_picture AS file_path
+        FROM users WHERE id = ? AND (? = 1 OR id = ?)');
+    $stmt->execute([$id, (int) isRole('admin'), $user]);
+} else {
+    http_response_code(400);
+    exit('Unknown document type.');
 }
 
-// ============================================
-// PROFILE PICTURE
-// ============================================
-if ($type === 'profile') {
-    $stmt = $db->prepare("SELECT full_name, profile_picture FROM users WHERE id = ?");
-    $stmt->execute(array($id));
-    $u = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$u || empty($u['profile_picture'])) {
-        http_response_code(404);
-        die('Profile picture not found');
-    }
-
-    $path = __DIR__ . '/uploads/profiles/' . $u['profile_picture'];
-    if (!file_exists($path)) {
-        http_response_code(404);
-        die('File missing on server');
-    }
-
-    $ext = pathinfo($u['profile_picture'], PATHINFO_EXTENSION);
-    $mime = 'image/' . ($ext === 'jpg' ? 'jpeg' : $ext);
-
-    header('Content-Type: ' . $mime);
-    header('Content-Disposition: attachment; filename="' . preg_replace('/[^A-Za-z0-9]/', '_', $u['full_name']) . '_profile.' . $ext . '"');
-    header('Content-Length: ' . filesize($path));
-    readfile($path);
-    exit;
+$file = $stmt->fetch(PDO::FETCH_ASSOC);
+$root = realpath($directory);
+$path = $file && $root && $file['file_path'] ? realpath($root . '/' . $file['file_path']) : false;
+if (!$path || !str_starts_with($path, $root . '/') || !is_file($path) || !is_readable($path)) {
+    http_response_code(404);
+    exit('Document not found.');
 }
 
-http_response_code(400);
-die('Unknown download type');
-?>
+$name = preg_replace('/[^A-Za-z0-9._-]/', '_', basename($file['file_name']));
+$mime = (new finfo(FILEINFO_MIME_TYPE))->file($path);
+$canPreview = in_array($mime, ['application/pdf', 'image/png', 'image/jpeg', 'image/gif', 'image/webp'], true);
+$disposition = isset($_GET['inline']) && $canPreview ? 'inline' : 'attachment';
+header('Content-Type: ' . ($canPreview ? $mime : 'application/octet-stream'));
+header('Content-Disposition: ' . $disposition . '; filename="' . ($name ?: 'document') . '"');
+header('Content-Length: ' . filesize($path));
+header('X-Content-Type-Options: nosniff');
+readfile($path);

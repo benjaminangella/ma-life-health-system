@@ -22,6 +22,38 @@ $message = '';
 $error = '';
 
 // ==========================================
+// FETCH DATA
+// ==========================================
+
+$stmt = $db->prepare("
+    SELECT
+        c.*,
+        u.full_name AS mother_name,
+        u.email AS mother_email,
+        u.phone AS mother_phone,
+        u.address AS mother_address,
+        m.national_id AS mother_national_id
+    FROM children c
+    JOIN mothers m ON c.mother_id = m.id
+    JOIN users u ON m.user_id = u.id
+    WHERE c.id = ?
+");
+$stmt->execute(array($child_id));
+$child = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$child) { http_response_code(404); exit('Child not found.'); }
+
+if ($user_role === 'mother') {
+    $stmt = $db->prepare("SELECT id FROM mothers WHERE user_id = ?");
+    $stmt->execute(array($user_id));
+    $mother = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$mother || $mother['id'] != $child['mother_id']) {
+        http_response_code(403);
+        exit('Access denied.');
+    }
+}
+
+// ==========================================
 // HANDLE FORM SUBMISSIONS
 // ==========================================
 
@@ -41,7 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         } else {
             $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
             $new_name = 'child_' . $child_id . '_' . time() . '.' . strtolower($ext);
-            $dest = __DIR__ . '/uploads/children/' . $new_name;
+            $directory = __DIR__ . '/uploads/children';
+            if (!is_dir($directory)) mkdir($directory, 0755, true);
+            $dest = $directory . '/' . $new_name;
 
             if (move_uploaded_file($file['tmp_name'], $dest)) {
                 // Delete old photo
@@ -88,7 +122,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
             $safe_name = preg_replace('/[^A-Za-z0-9._-]/', '_', $file['name']);
             $new_name = 'doc_' . $child_id . '_' . time() . '_' . $safe_name;
-            $dest = __DIR__ . '/uploads/documents/' . $new_name;
+            $directory = __DIR__ . '/uploads/documents';
+            if (!is_dir($directory)) mkdir($directory, 0755, true);
+            $dest = $directory . '/' . $new_name;
 
             if (move_uploaded_file($file['tmp_name'], $dest)) {
                 $stmt = $db->prepare("
@@ -125,37 +161,6 @@ if (isset($_GET['delete_doc']) && is_numeric($_GET['delete_doc'])) {
         @unlink(__DIR__ . '/uploads/documents/' . $doc['file_path']);
         $db->prepare("DELETE FROM child_documents WHERE id = ?")->execute(array($doc_id));
         $message = 'Document deleted.';
-    }
-}
-
-// ==========================================
-// FETCH DATA
-// ==========================================
-
-$stmt = $db->prepare("
-    SELECT
-        c.*,
-        u.full_name AS mother_name,
-        u.email AS mother_email,
-        u.phone AS mother_phone,
-        u.address AS mother_address,
-        m.national_id AS mother_national_id
-    FROM children c
-    JOIN mothers m ON c.mother_id = m.id
-    JOIN users u ON m.user_id = u.id
-    WHERE c.id = ?
-");
-$stmt->execute(array($child_id));
-$child = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$child) die('Child not found.');
-
-if ($user_role === 'mother') {
-    $stmt = $db->prepare("SELECT id FROM mothers WHERE user_id = ?");
-    $stmt->execute(array($user_id));
-    $mother = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!$mother || $mother['id'] != $child['mother_id']) {
-        die('Access denied.');
     }
 }
 
@@ -425,8 +430,8 @@ $hover = ($user_role === 'mother') ? '#880e4f' : '#004d40';
                                 <div class="meta" style="margin-top:5px;"><em><?php echo htmlspecialchars($doc['notes']); ?></em></div>
                             <?php endif; ?>
                             <div class="actions">
-                                <a href="uploads/documents/<?php echo htmlspecialchars($doc['file_path']); ?>" target="_blank" class="btn-view"><i class="fas fa-eye"></i> View</a>
-                                <a href="uploads/documents/<?php echo htmlspecialchars($doc['file_path']); ?>" download class="btn-dl"><i class="fas fa-download"></i></a>
+                                <a href="download_document.php?type=child_document&amp;inline=1&amp;id=<?php echo (int) $doc['id']; ?>" class="btn-view"><i class="fas fa-eye"></i> View</a>
+                                <a href="download_document.php?type=child_document&amp;id=<?php echo (int) $doc['id']; ?>" class="btn-dl"><i class="fas fa-download"></i></a>
                                 <a href="?id=<?php echo $child_id; ?>&delete_doc=<?php echo $doc['id']; ?>" class="btn-del" data-confirm="Delete this document?"><i class="fas fa-trash"></i></a>
                             </div>
                         </div>
