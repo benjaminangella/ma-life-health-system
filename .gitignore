@@ -1,0 +1,7 @@
+.env
+uploads/
+vendor/
+*.log
+sms_log.txt
+sms_queue_log.txt
+webauthn_challenges.json

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATERNAL AND CHILD HEALTH - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: lightblue;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        h1 {
+            color: #0A4C54;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        fieldset {
+            background: pink;
+            border: 2px solid #0A4C54;
+            border-radius: 12px;
+            padding: 30px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        legend {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #0A4C54;
+            padding: 0 10px;
+            text-transform: uppercase;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        .form-group input:focus {
+            border-color: #0A4C54;
+            outline: none;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: #0A4C54;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-login:hover {
+            background: #146b76;
+        }
+        .links {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        .links a {
+            color: #0A4C54;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-heartbeat"></i> MATERNAL AND CHILD HEALTH</h1>
+        <p class="subtitle">Maternal and Child Health Electronic System</p>
+        
+        <fieldset>
+            <legend align="center">Please Login Here</legend>
+            <div class="form">
+                <form action="login.php" method="post">
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+            </div>
+            <div class="links">
+                <p>Don't have an account? <a href="signup.php">Sign Up Here</a></p>
+            </div>
+        </fieldset>
+    </div>
+</body>
+</html>
