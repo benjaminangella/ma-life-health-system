@@ -124,6 +124,8 @@ $total_size = (int)$stmt->fetchColumn();
             .filter-bar { flex-direction: column; align-items: stretch; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -253,7 +255,7 @@ $total_size = (int)$stmt->fetchColumn();
                                             <a href="download_document.php?type=document&id=<?php echo $doc['id']; ?>" class="btn-sm btn-dl" title="Download">
                                                 <i class="fas fa-download"></i>
                                             </a>
-                                            <a href="?delete=<?php echo $doc['id']; ?>" class="btn-sm btn-del" onclick="return confirm('Delete this document permanently?')" title="Delete">
+                                            <a href="?delete=<?php echo $doc['id']; ?>" class="btn-sm btn-del" data-confirm="Delete this document permanently?" title="Delete">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </div>

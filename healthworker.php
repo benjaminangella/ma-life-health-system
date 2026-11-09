@@ -107,6 +107,8 @@ try {
         .profile-picture-widget .camera-btn:hover { background: #004d40; transform: scale(1.1); }
         .profile-picture-circle:hover { border-color: #ffb74d; }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">

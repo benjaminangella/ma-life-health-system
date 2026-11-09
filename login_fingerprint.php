@@ -35,6 +35,8 @@ if (isLoggedIn()) {
         .status.info { background: #e3f2fd; color: #0d47a1; display: block; }
         .back-link { display: block; margin-top: 20px; color: #0A4C54; text-decoration: none; font-weight: 600; }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="auth-container">

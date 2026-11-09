@@ -180,6 +180,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             .form-row { grid-template-columns: 1fr; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
 

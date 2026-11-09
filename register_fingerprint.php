@@ -27,6 +27,8 @@ $user = getUserById($_SESSION['user_id']);
         .fingerprint-icon { font-size: 5rem; color: #0A4C54; margin-bottom: 20px; }
         .back-link { display: inline-block; margin-top: 20px; color: #0A4C54; text-decoration: none; font-weight: 600; }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="container">

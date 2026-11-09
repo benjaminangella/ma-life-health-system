@@ -143,6 +143,8 @@ $notes_url = 'admin_notes.php';
         
         .btn { padding:10px 20px; color:#fff; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; gap:8px; font-weight:600; border:none; cursor:pointer; transition: 0.3s; }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <!-- Sidebar -->
@@ -233,7 +235,7 @@ $notes_url = 'admin_notes.php';
                             </div>
                             <a href="?remove=<?= (int)$dev['id'] ?>"
                                class="btn-remove"
-                               onclick="return confirm('Are you sure you want to remove this device?');">
+                               data-confirm="Are you sure you want to remove this device?">
                                 <i class="fas fa-trash"></i> Remove
                             </a>
                         </div>

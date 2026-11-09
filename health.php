@@ -79,6 +79,8 @@ try {
         .no-data { text-align: center; padding: 30px; color: #999; }
         @media (max-width: 768px) { .sidebar { width: 0; } .main, .topbar { margin-left: 0; } .stats-grid { grid-template-columns: 1fr 1fr; } }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">

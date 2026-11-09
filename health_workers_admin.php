@@ -103,6 +103,8 @@ $facility_count = count(array_unique($facilities));
             .page-header { flex-direction: column; gap: 10px; text-align: center; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -217,15 +219,15 @@ $facility_count = count(array_unique($facilities));
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <?php if ($status === 'active'): ?>
-                                                <a href="?action=deactivate&id=<?php echo $worker['id']; ?>" class="btn-sm btn-deactivate" onclick="return confirm('Deactivate this worker?')" title="Deactivate">
+                                                <a href="?action=deactivate&id=<?php echo $worker['id']; ?>" class="btn-sm btn-deactivate" data-confirm="Deactivate this worker?" title="Deactivate">
                                                     <i class="fas fa-ban"></i>
                                                 </a>
                                             <?php else: ?>
-                                                <a href="?action=activate&id=<?php echo $worker['id']; ?>" class="btn-sm btn-activate" onclick="return confirm('Activate this worker?')" title="Activate">
+                                                <a href="?action=activate&id=<?php echo $worker['id']; ?>" class="btn-sm btn-activate" data-confirm="Activate this worker?" title="Activate">
                                                     <i class="fas fa-check"></i>
                                                 </a>
                                             <?php endif; ?>
-                                            <a href="?action=delete&id=<?php echo $worker['id']; ?>" class="btn-sm btn-delete" onclick="return confirm('Remove this health worker?')" title="Delete">
+                                            <a href="?action=delete&id=<?php echo $worker['id']; ?>" class="btn-sm btn-delete" data-confirm="Remove this health worker?" title="Delete">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </div>

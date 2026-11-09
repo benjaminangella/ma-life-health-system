@@ -100,6 +100,8 @@ $today_count = $stmt->fetchColumn();
             .page-header { flex-direction: column; gap: 10px; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -198,11 +200,11 @@ $today_count = $stmt->fetchColumn();
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <?php if ($a['status'] !== 'completed'): ?>
-                                                <a href="?status=completed&id=<?php echo $a['id']; ?>" class="btn-sm btn-success" onclick="return confirm('Mark complete?')" title="Mark complete">
+                                                <a href="?status=completed&id=<?php echo $a['id']; ?>" class="btn-sm btn-success" data-confirm="Mark complete?" title="Mark complete">
                                                     <i class="fas fa-check"></i>
                                                 </a>
                                             <?php endif; ?>
-                                            <a href="?delete=<?php echo $a['id']; ?>" class="btn-sm btn-delete" onclick="return confirm('Delete?')" title="Delete">
+                                            <a href="?delete=<?php echo $a['id']; ?>" class="btn-sm btn-delete" data-confirm="Delete?" title="Delete">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </div>

@@ -183,6 +183,8 @@ $primary_admin_count = ma_life_count_primary_admins();
             .page-header { flex-direction: column; gap: 10px; align-items: flex-start; } 
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
 
@@ -313,12 +315,12 @@ $primary_admin_count = ma_life_count_primary_admins();
                                             <a href="edit_user.php?id=<?= $user['id'] ?>" class="btn-sm btn-edit"><i class="fas fa-edit"></i></a>
                                             <?php if (!$is_primary): ?>
                                                 <?php if ($status === 'active'): ?>
-                                                    <a href="?action=deactivate&id=<?= $user['id'] ?>" class="btn-sm btn-deactivate" onclick="return confirm('Deactivate this user?')"><i class="fas fa-ban"></i></a>
+                                                    <a href="?action=deactivate&id=<?= $user['id'] ?>" class="btn-sm btn-deactivate" data-confirm="Deactivate this user?"><i class="fas fa-ban"></i></a>
                                                 <?php else: ?>
-                                                    <a href="?action=activate&id=<?= $user['id'] ?>" class="btn-sm btn-activate" onclick="return confirm('Activate this user?')"><i class="fas fa-check"></i></a>
+                                                    <a href="?action=activate&id=<?= $user['id'] ?>" class="btn-sm btn-activate" data-confirm="Activate this user?"><i class="fas fa-check"></i></a>
                                                 <?php endif; ?>
                                                 <?php if ($user['role'] !== 'admin'): ?>
-                                                    <a href="?action=delete&id=<?= $user['id'] ?>" class="btn-sm btn-delete" onclick="return confirm('Delete this user permanently?')"><i class="fas fa-trash"></i></a>
+                                                    <a href="?action=delete&id=<?= $user['id'] ?>" class="btn-sm btn-delete" data-confirm="Delete this user permanently?"><i class="fas fa-trash"></i></a>
                                                 <?php endif; ?>
                                             <?php else: ?>
                                                 <span style="font-size:0.75rem; color:#94a3b8; padding:4px 8px; font-weight: 600;">Protected</span>

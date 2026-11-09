@@ -105,6 +105,8 @@ foreach ($settings as $setting) {
             .form-actions button { width: 100%; justify-content: center; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -232,7 +234,7 @@ foreach ($settings as $setting) {
                 <button type="reset" class="btn-reset">
                     <i class="fas fa-undo"></i> Reset Changes
                 </button>
-                <button type="button" class="btn btn-outline" onclick="if(confirm('Reset all settings to default?')){ alert('Restore defaults not implemented yet'); }">
+                <button type="button" class="btn btn-outline" data-notice="Restoring defaults is currently unavailable.">
                     <i class="fas fa-history"></i> Restore Defaults
                 </button>
             </div>

@@ -282,6 +282,8 @@ $hover = ($user_role === 'mother') ? '#880e4f' : '#004d40';
             .topbar, .main { margin-left: 0; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -425,7 +427,7 @@ $hover = ($user_role === 'mother') ? '#880e4f' : '#004d40';
                             <div class="actions">
                                 <a href="uploads/documents/<?php echo htmlspecialchars($doc['file_path']); ?>" target="_blank" class="btn-view"><i class="fas fa-eye"></i> View</a>
                                 <a href="uploads/documents/<?php echo htmlspecialchars($doc['file_path']); ?>" download class="btn-dl"><i class="fas fa-download"></i></a>
-                                <a href="?id=<?php echo $child_id; ?>&delete_doc=<?php echo $doc['id']; ?>" class="btn-del" onclick="return confirm('Delete this document?')"><i class="fas fa-trash"></i></a>
+                                <a href="?id=<?php echo $child_id; ?>&delete_doc=<?php echo $doc['id']; ?>" class="btn-del" data-confirm="Delete this document?"><i class="fas fa-trash"></i></a>
                             </div>
                         </div>
                     <?php endforeach; ?>

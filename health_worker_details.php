@@ -137,6 +137,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             .header h2 { font-size: 1rem; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">

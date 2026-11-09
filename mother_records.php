@@ -205,6 +205,8 @@ if ($visits) {
         @media (max-width: 768px) {.sidebar { width: 200px; }.topbar { margin-left: 200px; padding: 0 20px; }.main { margin-left: 200px; padding: 15px; }.filter-section { flex-direction: column; align-items: stretch; }.filter-section select { width: 100%; }.filter-section.mother-info { margin-left: 0; }.form-row { grid-template-columns: 1fr; }.stats-row { grid-template-columns: 1fr; } }
         @media (max-width: 550px) {.sidebar { width: 0; overflow: hidden; }.topbar { margin-left: 0; padding: 0 15px; }.main { margin-left: 0; padding: 10px; }.header h2 { font-size: 1rem; } }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -312,7 +314,7 @@ if ($visits) {
                                         </div>
                                     </div>
                                     <div class="actions">
-                                        <a href="?delete=1&id=<?php echo $visit['id'];?>&mother_id=<?php echo $mother_id;?>" class="btn-sm btn-danger-sm" onclick="return confirm('Delete this visit record?')">
+                                        <a href="?delete=1&id=<?php echo $visit['id'];?>&mother_id=<?php echo $mother_id;?>" class="btn-sm btn-danger-sm" data-confirm="Delete this visit record?">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </div>

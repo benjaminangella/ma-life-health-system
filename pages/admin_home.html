@@ -136,6 +136,8 @@
             .page-header { flex-direction: column; gap: 10px; text-align: center; }
         }
     </style>
+    <link rel="stylesheet" href="../interface.css">
+    <script src="../interface.js" defer></script>
 </head>
 <body>
     <div class="admin-home">
@@ -150,13 +152,13 @@
         </div>
 
         <div class="quick-actions">
-            <button class="quick-action-btn" onclick="alert('Add new user functionality')">
+            <button class="quick-action-btn" data-notice="Add new user functionality">
                 <i class="fas fa-user-plus"></i> Add User
             </button>
-            <button class="quick-action-btn green" onclick="alert('Register mother functionality')">
+            <button class="quick-action-btn green" data-notice="Register mother functionality">
                 <i class="fas fa-female"></i> Register Mother
             </button>
-            <button class="quick-action-btn orange" onclick="alert('Generate report functionality')">
+            <button class="quick-action-btn orange" data-notice="Generate report functionality">
                 <i class="fas fa-file-pdf"></i> Generate Report
             </button>
         </div>

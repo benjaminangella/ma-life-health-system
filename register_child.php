@@ -315,6 +315,8 @@ nav a .badge-count { position:absolute; right:15px; top:50%; transform:translate
 @media (max-width:768px) { .sidebar { width:200px; } .topbar, .main { margin-left:200px; } }
 @media (max-width:550px) { .sidebar { width:0; overflow:hidden; } .topbar, .main { margin-left:0; } }
 </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
 <div class="sidebar">
@@ -475,7 +477,7 @@ if (!empty($attachments_by_note[$note['id']])) {
 <div class="att-actions">
 <a href="uploads/documents/<?php echo htmlspecialchars($att['file_path']); ?>" target="_blank" class="view" onclick="event.stopPropagation();"><i class="fas fa-eye"></i></a>
 <a href="download_document.php?type=note_attachment&id=<?php echo $att['id']; ?>" class="view" onclick="event.stopPropagation();"><i class="fas fa-download"></i></a>
-<a href="?delete_attachment=<?php echo $att['id']; ?>" class="del" onclick="event.stopPropagation(); return confirm('Remove this attachment?');"><i class="fas fa-times"></i></a>
+<a href="?delete_attachment=<?php echo $att['id']; ?>" class="del" data-confirm="Remove this attachment?"><i class="fas fa-times"></i></a>
 </div>
 </div>
 <?php endforeach; ?>
@@ -486,7 +488,7 @@ if (!empty($attachments_by_note[$note['id']])) {
 <button type="button" class="btn-share" onclick='event.stopPropagation(); openShareModal(<?php echo $note['id']; ?>, "<?php echo htmlspecialchars(addslashes($note["title"])); ?>")'><i class="fas fa-share"></i> Share</button>
 <?php endif; ?>
 <a href="?toggle_pin=<?php echo $note['id']; ?>" class="btn-pin <?php echo $note['is_pinned'] ? 'active' : ''; ?>" onclick="event.stopPropagation();"><i class="fas fa-thumbtack"></i> <?php echo $note['is_pinned'] ? 'Unpin' : 'Pin'; ?></a>
-<a href="?delete_note=<?php echo $note['id']; ?>" class="btn-del" onclick="event.stopPropagation(); return confirm('Delete this note?');"><i class="fas fa-trash"></i> Delete</a>
+<a href="?delete_note=<?php echo $note['id']; ?>" class="btn-del" data-confirm="Delete this note?"><i class="fas fa-trash"></i> Delete</a>
 </div>
 </div>
 <?php endforeach; ?>

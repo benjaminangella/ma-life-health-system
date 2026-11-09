@@ -271,7 +271,9 @@ function requireRole($role) {
                 .btn-primary { background:#0A4C54; color:#fff; }
                 .btn-outline { background:#fff; color:#0A4C54; border:2px solid #0A4C54; }
             </style>
-        </head>
+            <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
+</head>
         <body>
             <div class="card">
                 <i class="fas fa-lock"></i>

@@ -249,6 +249,8 @@ $hover = ($user_role == 'mother') ? '#880e4f' : '#004d40';
             .topbar, .main { margin-left: 0; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -325,9 +327,9 @@ $hover = ($user_role == 'mother') ? '#880e4f' : '#004d40';
                                         <span class="status status-<?php echo $status; ?>"><?php echo ucfirst($status); ?></span>
                                         <div style="margin-top:5px;">
                                             <?php if ($status === 'pending' || $status === 'overdue'): ?>
-                                                <a href="?done=1&id=<?php echo $im['id']; ?>&child_id=<?php echo $child_id; ?>" class="btn-sm btn-success-sm" onclick="return confirm('Mark as done?')"><i class="fas fa-check"></i></a>
+                                                <a href="?done=1&id=<?php echo $im['id']; ?>&child_id=<?php echo $child_id; ?>" class="btn-sm btn-success-sm" data-confirm="Mark as done?"><i class="fas fa-check"></i></a>
                                             <?php endif; ?>
-                                            <a href="?delete=1&id=<?php echo $im['id']; ?>&child_id=<?php echo $child_id; ?>" class="btn-sm btn-danger-sm" onclick="return confirm('Delete?')"><i class="fas fa-trash"></i></a>
+                                            <a href="?delete=1&id=<?php echo $im['id']; ?>&child_id=<?php echo $child_id; ?>" class="btn-sm btn-danger-sm" data-confirm="Delete?"><i class="fas fa-trash"></i></a>
                                         </div>
                                     </div>
                                 </div>

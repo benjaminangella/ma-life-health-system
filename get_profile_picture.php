@@ -71,12 +71,12 @@ $initial = strtoupper(substr($user['full_name'], 0, 1));
                     // Replace contents with new image
                     circle.innerHTML = '<img src="' + data.url + '?t=' + Date.now() + '" style="width:100%; height:100%; object-fit:cover;" alt="Profile">';
                 } else {
-                    alert('Upload failed: ' + (data.error || 'Unknown error'));
+                    malifeNotice('Upload failed: ' + (data.error || 'Unknown error'), document.querySelector('input[type=file]'));
                 }
             })
             .catch(function(err) {
                 circle.style.opacity = '1';
-                alert('Upload failed: ' + err.message);
+                malifeNotice('Upload failed: ' + err.message, document.querySelector('input[type=file]'));
             });
         });
     }

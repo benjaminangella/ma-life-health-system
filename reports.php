@@ -110,6 +110,8 @@ foreach ($appointment_stats as $stat) {
             .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">

@@ -466,29 +466,19 @@ function printReport(reportId) {
     const reportContent = document.getElementById(reportId);
     if (!reportContent) return;
     
-    const printWindow = window.open('', '_blank', 'width=800,height=600');
-    printWindow.document.write(`
-        <html>
-            <head>
-                <title>Print Report</title>
-                <link rel="stylesheet" href="style.css">
-                <style>
-                    body { padding: 40px; }
-                    .no-print { display: none; }
-                </style>
-            </head>
-            <body>
-                ${reportContent.innerHTML}
-                <script>
-                    window.onload = function() {
-                        window.print();
-                        window.close();
-                    }
-                <\/script>
-            </body>
-        </html>
-    `);
-    printWindow.document.close();
+    const frame = document.createElement('iframe');
+    frame.title = 'Printable report';
+    frame.style.cssText = 'position:fixed;width:0;height:0;border:0';
+    frame.onload = () => {
+        const view = frame.contentWindow;
+        view.addEventListener('afterprint', () => frame.remove(), {once: true});
+        view.print();
+    };
+    frame.srcdoc = `<!doctype html><html lang="en"><head><title>Print report</title>
+        <link rel="stylesheet" href="style.css"><style>
+        body { padding: 40px; } .no-print { display: none; }
+        </style></head><body>${reportContent.innerHTML}</body></html>`;
+    document.body.append(frame);
 }
 
 /**

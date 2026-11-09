@@ -96,6 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #0A4C54; border-radius: 10px; }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="auth-container">

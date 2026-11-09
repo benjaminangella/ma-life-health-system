@@ -129,6 +129,8 @@ try {
         .menu-toggle { display: none; background: none; border: none; color: #ad1457; font-size: 1.5rem; cursor: pointer; padding: 5px 10px; }
         @media (max-width: 768px) { .menu-toggle { display: block; } }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="dashboard-wrapper">

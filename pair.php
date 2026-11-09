@@ -124,6 +124,8 @@ if (!empty($token) && !preg_match('/^[a-f0-9]{32}$/', $token)) {
         .btn-submit { width:100%; padding:15px; background:#0A4C54; color:#fff; border:none; border-radius:8px; font-size:1.1rem; font-weight:600; cursor:pointer; transition: 0.3s; }
         .btn-submit:hover { background:#146b76; }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="card">

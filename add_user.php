@@ -235,6 +235,8 @@ $admin_exists = ((int)$stmt->fetchColumn()) > 0;
             .page-header { flex-direction: column; gap: 10px; text-align: center; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <!-- Sidebar -->

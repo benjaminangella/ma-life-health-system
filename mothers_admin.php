@@ -83,6 +83,8 @@ foreach ($mothers as $m) {
             .page-header { flex-direction: column; gap: 10px; text-align: center; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -202,7 +204,7 @@ foreach ($mothers as $m) {
                                             <a href="edit_mother.php?id=<?php echo $mother['id']; ?>" class="btn-sm btn-edit" title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="?action=delete&id=<?php echo $mother['id']; ?>" class="btn-sm btn-delete" onclick="return confirm('Delete this mother record?')" title="Delete">
+                                            <a href="?action=delete&id=<?php echo $mother['id']; ?>" class="btn-sm btn-delete" data-confirm="Delete this mother record?" title="Delete">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </div>

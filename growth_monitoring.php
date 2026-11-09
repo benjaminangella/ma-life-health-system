@@ -257,6 +257,8 @@ if ($growth_records) {
         @media (max-width: 768px) {.sidebar { width: 200px; }.topbar { margin-left: 200px; padding: 0 20px; }.main { margin-left: 200px; padding: 15px; }.filter-section { flex-direction: column; align-items: stretch; }.filter-section select { width: 100%; }.filter-section.child-info { margin-left: 0; }.form-row { grid-template-columns: 1fr; }.stats-row { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 550px) {.sidebar { width: 0; overflow: hidden; }.topbar { margin-left: 0; padding: 0 15px; }.main { margin-left: 0; padding: 10px; }.stats-row { grid-template-columns: 1fr; }.header h2 { font-size: 1rem; } }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -405,7 +407,7 @@ if ($growth_records) {
                                             </span>
                                         <?php endif;?>
                                         <div class="actions">
-                                            <a href="?delete=1&id=<?php echo $record['id'];?>&child_id=<?php echo $child_id;?>" class="btn-sm btn-danger-sm" onclick="return confirm('Delete this growth record?')">
+                                            <a href="?delete=1&id=<?php echo $record['id'];?>&child_id=<?php echo $child_id;?>" class="btn-sm btn-danger-sm" data-confirm="Delete this growth record?">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </div>

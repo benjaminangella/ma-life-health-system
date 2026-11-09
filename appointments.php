@@ -149,6 +149,8 @@ if ($user_role === 'mother') {
             .main-content { padding: 15px; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
 
@@ -264,7 +266,7 @@ if ($user_role === 'mother') {
 
                         <div class="apt-actions">
                             <?php if ($user_role === 'mother' && in_array($apt['status'], ['scheduled', 'confirmed'])): ?>
-                                <a href="?cancel_id=<?= $apt['id'] ?>" class="btn btn-outline" style="color: #ef4444; border-color: #fca5a5;" onclick="return confirm('Are you sure you want to cancel this appointment?');">
+                                <a href="?cancel_id=<?= $apt['id'] ?>" class="btn btn-outline" style="color: #ef4444; border-color: #fca5a5;" data-confirm="Are you sure you want to cancel this appointment?">
                                     Cancel
                                 </a>
                             <?php elseif ($user_role === 'healthworker' && $apt['status'] === 'scheduled'): ?>

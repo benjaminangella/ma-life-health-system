@@ -97,6 +97,8 @@ if(isLoggedIn()) {
         .system-access .signup-text { display: block; margin-top: 10px; }
     }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
 

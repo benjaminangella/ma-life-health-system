@@ -83,6 +83,8 @@ $session_remaining = getSessionRemaining();
         .empty-state { text-align:center; padding:60px 20px; color:#999; }
         .empty-state i { font-size:3rem; display:block; margin-bottom:15px; color:#ddd; }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -111,7 +113,7 @@ $session_remaining = getSessionRemaining();
             <h2>Sent Notifications</h2>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
                 <?php if ($queue_stats['queued'] > 0 && $online): ?>
-                    <a href="?flush=1" class="btn btn-orange" onclick="return confirm('Send <?php echo $queue_stats['queued']; ?> queued SMS now?');">
+                    <a href="?flush=1" class="btn btn-orange" data-confirm="Send <?php echo $queue_stats['queued']; ?> queued SMS now?">
                         <i class="fas fa-paper-plane"></i> Send <?php echo $queue_stats['queued']; ?> Queued
                     </a>
                 <?php elseif ($queue_stats['queued'] > 0 && !$online): ?>

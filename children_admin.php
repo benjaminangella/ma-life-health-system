@@ -90,6 +90,8 @@ function calculateAge($birth_date) {
         }
         @media (max-width: 480px) { .stats-row { grid-template-columns: 1fr; } }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -198,7 +200,7 @@ function calculateAge($birth_date) {
                                         <div class="action-btns">
                                             <a href="view_child.php?id=<?php echo $child['id']; ?>" class="btn-sm btn-view"><i class="fas fa-eye"></i></a>
                                             <a href="edit_child.php?id=<?php echo $child['id']; ?>" class="btn-sm btn-edit"><i class="fas fa-edit"></i></a>
-                                            <a href="?action=delete&id=<?php echo $child['id']; ?>" class="btn-sm btn-delete" onclick="return confirm('Delete?')"><i class="fas fa-trash"></i></a>
+                                            <a href="?action=delete&id=<?php echo $child['id']; ?>" class="btn-sm btn-delete" data-confirm="Delete?"><i class="fas fa-trash"></i></a>
                                         </div>
                                     </td>
                                 </tr>

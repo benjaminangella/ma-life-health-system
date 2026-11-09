@@ -128,6 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             .main { margin-left: 0; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">

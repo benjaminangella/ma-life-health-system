@@ -76,6 +76,8 @@ $session_remaining = getSessionRemaining();
         @media (max-width:768px) { .sidebar { width:200px; } .topbar, .main { margin-left:200px; } }
         @media (max-width:550px) { .sidebar { width:0; overflow:hidden; } .topbar, .main { margin-left:0; } }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -136,7 +138,7 @@ $session_remaining = getSessionRemaining();
                                 <td><?php echo htmlspecialchars($d['device_type']); ?></td>
                                 <td><?php echo date('d M Y', strtotime($d['paired_at'])); ?></td>
                                 <td><?php echo $d['last_seen'] ? date('d M Y H:i', strtotime($d['last_seen'])) : 'Never'; ?></td>
-                                <td><a href="?remove=<?php echo $d['id']; ?>" class="btn btn-danger" style="padding:5px 12px; font-size:0.8rem;" onclick="return confirm('Remove?');"><i class="fas fa-trash"></i></a></td>
+                                <td><a href="?remove=<?php echo $d['id']; ?>" class="btn btn-danger" style="padding:5px 12px; font-size:0.8rem;" data-confirm="Remove?"><i class="fas fa-trash"></i></a></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

@@ -109,6 +109,8 @@ function val($arr, $key, $default = 0) {
             .report-grid { grid-template-columns: 1fr; }
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
@@ -141,10 +143,10 @@ function val($arr, $key, $default = 0) {
         <div class="page-header">
             <h2>System Analytics & Reports</h2>
             <div>
-                <button class="btn-export green" onclick="alert('PDF report generation...')">
+                <button class="btn-export green" data-notice="PDF report generation...">
                     <i class="fas fa-file-pdf"></i> Export PDF
                 </button>
-                <button class="btn-export" onclick="alert('CSV export...')">
+                <button class="btn-export" data-notice="CSV export...">
                     <i class="fas fa-file-csv"></i> Export CSV
                 </button>
             </div>

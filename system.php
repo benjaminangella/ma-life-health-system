@@ -97,6 +97,8 @@ if(isLoggedIn()) {
             margin-top: 20px;
         }
     </style>
+    <link rel="stylesheet" href="interface.css">
+    <script src="interface.js" defer></script>
 </head>
 <body>
     <div class="access-container">
